@@ -1,0 +1,126 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  /* Нейтральный чёрный без синего/фиолетового подтона */
+  --color-void: #050505;
+  --color-void-deep: #030303;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100%;
+    font-family: var(--font-sans);
+    background-color: var(--color-void);
+    background-image: linear-gradient(
+      168deg,
+      #030303 0%,
+      #080808 42%,
+      #050505 100%
+    );
+    color: #f5f5f5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #root {
+    min-height: 100%;
+  }
+
+}
+
+@keyframes cosmic-twinkle {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(0.75);
+  }
+  50% {
+    transform: scale(1.35);
+    filter: brightness(1.45);
+  }
+}
+
+@keyframes cosmic-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(var(--drift-x, 0px), var(--drift-y, 0px), 0);
+  }
+}
+
+.cosmic-star-drift {
+  animation-name: cosmic-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cosmic-star-drift {
+    animation: none !important;
+  }
+}
+
+@keyframes header-reveal {
+  from {
+    transform: translate3d(0, -100%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.header-enter {
+  animation: header-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-enter {
+    animation: none;
+    transform: none;
+  }
+}
+
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.hero-reveal {
+  animation: hero-fade-up 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.hero-reveal-delay-1 {
+  animation-delay: 0.14s;
+}
+
+.hero-reveal-delay-2 {
+  animation-delay: 0.32s;
+}
+
+.hero-reveal-delay-3 {
+  animation-delay: 0.5s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
