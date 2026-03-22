@@ -61,7 +61,7 @@ function buildGalaxyLikeStar(
   const size = 1 + Math.floor(rnd() * 2.4)
   const opacity = 0.42 + rnd() * 0.48
   const blur = 3 + size * 2.2
-  const glow = `0 0 ${blur}px rgba(255, 236, 210, ${0.5 + rnd() * 0.32}), 0 0 ${blur + 8}px rgba(185, 155, 115, ${0.2 + rnd() * 0.22})`
+  const glow = `0 0 ${blur}px rgba(210, 230, 255, ${0.55 + rnd() * 0.35}), 0 0 ${blur + 8}px rgba(150, 195, 255, ${0.22 + rnd() * 0.25})`
   const dx = (rnd() - 0.5) * 44
   const dy = (rnd() - 0.5) * 36
   return {
@@ -303,10 +303,10 @@ export function CosmicStarfield() {
             s.left,
             s.top,
             <span
-              className="pointer-events-none block h-px w-px rounded-full bg-[rgb(255,244,220)]/95"
+              className="pointer-events-none block h-px w-px rounded-full bg-cyan-50/95"
               style={{
                 boxShadow:
-                  '0 0 5px 1px rgba(255, 232, 205, 0.95), 0 0 14px 3px rgba(190, 155, 110, 0.4)',
+                  '0 0 5px 1px rgba(185, 225, 255, 0.95), 0 0 14px 3px rgba(130, 175, 255, 0.4)',
                 animation: `cosmic-twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
               }}
             />,
@@ -327,10 +327,10 @@ export function CosmicStarfield() {
             s.left,
             s.top,
             <span
-              className="pointer-events-none block h-px w-px rounded-full bg-[rgb(255,246,224)]/95"
+              className="pointer-events-none block h-px w-px rounded-full bg-cyan-50/95"
               style={{
                 boxShadow:
-                  '0 0 6px 1px rgba(255, 238, 212, 1), 0 0 16px 3px rgba(200, 165, 118, 0.45)',
+                  '0 0 6px 1px rgba(195, 230, 255, 1), 0 0 16px 3px rgba(140, 190, 255, 0.45)',
                 animation: `cosmic-twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
               }}
             />,

@@ -11,7 +11,7 @@ export function App() {
   return (
     <ViewportCursorProvider>
     <div className="relative min-h-screen w-full bg-transparent text-white antialiased">
-      <div className="pointer-events-none absolute inset-0 z-0 min-h-full w-full opacity-[0.22]">
+      <div className="pointer-events-none absolute inset-0 z-0 min-h-full w-full opacity-[0.42]">
         <CosmicStarfield />
       </div>
       <CursorStarTrail />

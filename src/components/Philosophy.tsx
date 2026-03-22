@@ -13,9 +13,9 @@ export function Philosophy() {
             className="absolute inset-0"
             style={{
               background: `
-                radial-gradient(ellipse 120% 80% at 30% 20%, rgba(58, 54, 48, 0.22), transparent 50%),
-                radial-gradient(ellipse 100% 100% at 70% 80%, rgba(26, 24, 22, 0.45), transparent 45%),
-                radial-gradient(circle at 50% 50%, rgba(10, 10, 10, 1), #030303)
+                radial-gradient(ellipse 120% 80% at 30% 20%, rgba(90, 85, 110, 0.22), transparent 50%),
+                radial-gradient(ellipse 100% 100% at 70% 80%, rgba(28, 22, 38, 0.45), transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(18, 16, 24, 1), #050208)
               `,
             }}
           />

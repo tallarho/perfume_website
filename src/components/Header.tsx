@@ -21,7 +21,7 @@ const nav = [
 
 export function Header() {
   return (
-    <header className="header-enter fixed top-0 right-0 left-0 z-50 border-b border-amber-100/[0.07] bg-[#050505]/58 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl backdrop-saturate-150">
+    <header className="header-enter fixed top-0 right-0 left-0 z-50 border-b border-amber-100/[0.07] bg-[#0a0514]/58 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-5 md:px-10">
         <a
           href="#home"

@@ -47,7 +47,7 @@ function ProductPlaceholder({ label }: { label: string }) {
         className="absolute inset-0 opacity-40"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(195, 165, 105, 0.2), transparent), linear-gradient(165deg, rgba(255,255,255,0.06) 0%, transparent 45%)',
+            'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(139,92,246,0.25), transparent), linear-gradient(165deg, rgba(255,255,255,0.06) 0%, transparent 45%)',
         }}
       />
       <div className="absolute inset-x-[28%] bottom-[18%] top-[22%] rounded-b-lg rounded-t-2xl border border-white/10 bg-gradient-to-b from-white/[0.12] to-white/[0.02] shadow-[inset_0_-20px_40px_rgba(0,0,0,0.4)]" />

@@ -90,8 +90,8 @@ export function CursorStarTrail() {
       ctx.translate(p.x, p.y)
       ctx.rotate(p.rot)
       ctx.globalAlpha = fade * fade * 0.9
-      ctx.strokeStyle = 'rgba(255, 236, 215, 0.92)'
-      ctx.shadowColor = 'rgba(200, 170, 125, 0.85)'
+      ctx.strokeStyle = 'rgba(220, 238, 255, 0.92)'
+      ctx.shadowColor = 'rgba(150, 195, 255, 0.85)'
       ctx.shadowBlur = 5 + fade * 4
       ctx.lineWidth = 0.75
       ctx.lineCap = 'round'

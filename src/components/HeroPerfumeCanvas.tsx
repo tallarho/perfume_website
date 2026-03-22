@@ -113,7 +113,7 @@ function ModelPedestal() {
       >
         <cylinderGeometry args={[glassR, glassR, PEDESTAL_GLASS_H, 56]} />
         <meshPhysicalMaterial
-          color="#faf8f4"
+          color="#faf8ff"
           transparent
           opacity={0.92}
           transmission={0.72}

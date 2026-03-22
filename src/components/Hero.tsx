@@ -1,5 +1,5 @@
-import { HeroLiquidGlassBackground } from './HeroLiquidGlass'
 import { HeroPerfumeCanvas } from './HeroPerfumeCanvas'
+import { HeroSpiralBackground } from './HeroSpiralBackground'
 
 export function Hero() {
   return (
@@ -7,7 +7,7 @@ export function Hero() {
       id="home"
       className="relative flex min-h-screen flex-col overflow-hidden pt-28 pb-28 md:pb-32"
     >
-      <HeroLiquidGlassBackground />
+      <HeroSpiralBackground />
 
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.12] mix-blend-overlay"
@@ -19,7 +19,7 @@ export function Hero() {
       />
 
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-black/38 to-black/88"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/48 via-black/22 to-black/78"
         aria-hidden
       />
 
