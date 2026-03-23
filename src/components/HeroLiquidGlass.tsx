@@ -1,5 +1,12 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from 'react'
 import * as THREE from 'three'
 
 function usePrefersReducedMotion(): boolean {
@@ -117,18 +124,21 @@ void main() {
 }
 `
 
+const PLANE_ARGS = [2, 2] as const
+
 function LiquidScene({ mobile }: { mobile: boolean }) {
   const materialRef = useRef<THREE.ShaderMaterial | null>(null)
   const { size } = useThree()
 
+  /** Один Vector2 и один объект uniforms на всё время жизни сцены — без лишних аллокаций при смене mobile. */
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
       uResolution: { value: new THREE.Vector2(1, 1) },
       uReduced: { value: 0 },
-      uMobile: { value: mobile ? 1 : 0 },
+      uMobile: { value: 0 },
     }),
-    [mobile],
+    [],
   )
 
   useEffect(() => {
@@ -136,16 +146,20 @@ function LiquidScene({ mobile }: { mobile: boolean }) {
     if (mat) mat.uniforms.uMobile.value = mobile ? 1 : 0
   }, [mobile])
 
+  useEffect(() => {
+    const mat = materialRef.current
+    if (mat) mat.uniforms.uResolution.value.set(size.width, size.height)
+  }, [size.width, size.height])
+
   useFrame((state) => {
     const mat = materialRef.current
     if (!mat) return
     mat.uniforms.uTime.value = state.clock.elapsedTime
-    mat.uniforms.uResolution.value.set(size.width, size.height)
   })
 
   return (
     <mesh frustumCulled={false}>
-      <planeGeometry args={[2, 2]} />
+      <planeGeometry args={PLANE_ARGS} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}
@@ -171,9 +185,28 @@ function FallbackBackground() {
   )
 }
 
-export function HeroLiquidGlassBackground() {
+const HERO_CAMERA = {
+  position: [0, 0, 1] as [number, number, number],
+  zoom: 1,
+  near: 0.1,
+  far: 10,
+}
+
+const IO_ROOT_MARGIN = '120px'
+
+export function HeroLiquidGlassBackground({
+  visibilityRootRef,
+}: {
+  visibilityRootRef?: RefObject<HTMLElement | null>
+}) {
   const reduced = usePrefersReducedMotion()
   const [mobile, setMobile] = useState(false)
+  const [heroInView, setHeroInView] = useState(true)
+  const ioOptionsRef = useRef({
+    root: null as Document | Element | null,
+    rootMargin: IO_ROOT_MARGIN,
+    threshold: 0,
+  })
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)')
@@ -182,6 +215,30 @@ export function HeroLiquidGlassBackground() {
     mq.addEventListener('change', apply)
     return () => mq.removeEventListener('change', apply)
   }, [])
+
+  useEffect(() => {
+    const el = visibilityRootRef?.current
+    if (!el) return
+    const io = new IntersectionObserver((entries) => {
+      const entry = entries[0]
+      if (entry) setHeroInView(entry.isIntersecting)
+    }, ioOptionsRef.current)
+    io.observe(el)
+    return () => io.disconnect()
+  }, [visibilityRootRef])
+
+  const maxDpr = mobile ? 1.25 : 1.35
+  const dprTuple = useMemo(() => [1, maxDpr] as [number, number], [maxDpr])
+  const glConfig = useMemo(
+    () => ({
+      alpha: false,
+      antialias: !mobile,
+      powerPreference: 'high-performance' as const,
+      stencil: false,
+      depth: false,
+    }),
+    [mobile],
+  )
 
   if (reduced) {
     return <FallbackBackground />
@@ -192,16 +249,10 @@ export function HeroLiquidGlassBackground() {
       <Canvas
         className="h-full w-full touch-none"
         orthographic
-        camera={{ position: [0, 0, 1], zoom: 1, near: 0.1, far: 10 }}
-        gl={{
-          alpha: false,
-          antialias: !mobile,
-          powerPreference: 'high-performance',
-          stencil: false,
-          depth: false,
-        }}
-        dpr={mobile ? [1, 1.25] : [1, 2]}
-        frameloop="always"
+        camera={HERO_CAMERA}
+        gl={glConfig}
+        dpr={dprTuple}
+        frameloop={heroInView ? 'always' : 'never'}
         onCreated={({ gl }) => {
           gl.setClearColor(0x050505, 1)
         }}

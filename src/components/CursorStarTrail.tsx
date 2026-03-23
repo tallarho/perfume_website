@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 
-const MAX_PARTICLES = 100
-const SPAWN_INTERVAL_MS = 26
+const MAX_PARTICLES = 56
+const SPAWN_INTERVAL_MS = 28
+const MAX_DPR = 1.25
 
 type Particle = {
+  alive: boolean
   x: number
   y: number
   vx: number
@@ -15,9 +17,28 @@ type Particle = {
   arm: number
 }
 
+function createPool(n: number): Particle[] {
+  const pool: Particle[] = new Array(n)
+  for (let i = 0; i < n; i++) {
+    pool[i] = {
+      alive: false,
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      t: 0,
+      maxLife: 1,
+      rot: 0,
+      spin: 0,
+      arm: 1,
+    }
+  }
+  return pool
+}
+
 export function CursorStarTrail() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const particles = useRef<Particle[]>([])
+  const poolRef = useRef<Particle[] | null>(null)
   const lastSpawn = useRef(0)
   const rafRef = useRef(0)
   const [reduced, setReduced] = useState(false)
@@ -39,12 +60,18 @@ export function CursorStarTrail() {
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
+    const pool = createPool(MAX_PARTICLES)
+    poolRef.current = pool
+
     let last = performance.now()
+    const viewRef = { w: window.innerWidth, h: window.innerHeight }
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      const w = window.innerWidth
-      const h = window.innerHeight
+      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)
+      viewRef.w = window.innerWidth
+      viewRef.h = window.innerHeight
+      const w = viewRef.w
+      const h = viewRef.h
       canvas.width = Math.floor(w * dpr)
       canvas.height = Math.floor(h * dpr)
       canvas.style.width = `${w}px`
@@ -54,22 +81,37 @@ export function CursorStarTrail() {
     resize()
     window.addEventListener('resize', resize)
 
+    const acquireSlot = (): Particle => {
+      for (let i = 0; i < MAX_PARTICLES; i++) {
+        const p = pool[i]!
+        if (!p.alive) return p
+      }
+      let oldest = 0
+      let maxT = pool[0]!.t
+      for (let i = 1; i < MAX_PARTICLES; i++) {
+        const p = pool[i]!
+        if (p.t > maxT) {
+          maxT = p.t
+          oldest = i
+        }
+      }
+      return pool[oldest]!
+    }
+
     const spawn = (cx: number, cy: number) => {
-      const list = particles.current
-      if (list.length >= MAX_PARTICLES) list.shift()
+      const p = acquireSlot()
       const ang = Math.random() * Math.PI * 2
       const speed = 0.12 + Math.random() * 0.38
-      list.push({
-        x: cx + (Math.random() - 0.5) * 5,
-        y: cy + (Math.random() - 0.5) * 5,
-        vx: Math.cos(ang) * speed,
-        vy: Math.sin(ang) * speed,
-        t: 0,
-        maxLife: 0.45 + Math.random() * 0.55,
-        rot: Math.random() * Math.PI,
-        spin: (Math.random() - 0.5) * 0.12,
-        arm: 1.8 + Math.random() * 2.4,
-      })
+      p.alive = true
+      p.x = cx + (Math.random() - 0.5) * 5
+      p.y = cy + (Math.random() - 0.5) * 5
+      p.vx = Math.cos(ang) * speed
+      p.vy = Math.sin(ang) * speed
+      p.t = 0
+      p.maxLife = 0.45 + Math.random() * 0.55
+      p.rot = Math.random() * Math.PI
+      p.spin = (Math.random() - 0.5) * 0.12
+      p.arm = 1.8 + Math.random() * 2.4
     }
 
     const onMove = (e: PointerEvent) => {
@@ -91,8 +133,6 @@ export function CursorStarTrail() {
       ctx.rotate(p.rot)
       ctx.globalAlpha = fade * fade * 0.9
       ctx.strokeStyle = 'rgba(255, 236, 215, 0.92)'
-      ctx.shadowColor = 'rgba(200, 170, 125, 0.85)'
-      ctx.shadowBlur = 5 + fade * 4
       ctx.lineWidth = 0.75
       ctx.lineCap = 'round'
       ctx.beginPath()
@@ -103,7 +143,6 @@ export function CursorStarTrail() {
       ctx.stroke()
       const d = arm * 0.58
       ctx.globalAlpha = fade * fade * 0.42
-      ctx.shadowBlur = 3
       ctx.beginPath()
       ctx.moveTo(-d, -d)
       ctx.lineTo(d, d)
@@ -116,17 +155,17 @@ export function CursorStarTrail() {
     const loop = (now: number) => {
       const dt = Math.min(0.033, (now - last) / 1000)
       last = now
-      const w = window.innerWidth
-      const h = window.innerHeight
+      const w = viewRef.w
+      const h = viewRef.h
 
       ctx.clearRect(0, 0, w, h)
 
-      const list = particles.current
-      for (let i = list.length - 1; i >= 0; i--) {
-        const p = list[i]!
+      for (let i = 0; i < MAX_PARTICLES; i++) {
+        const p = pool[i]!
+        if (!p.alive) continue
         p.t += dt
         if (p.t >= p.maxLife) {
-          list.splice(i, 1)
+          p.alive = false
           continue
         }
         p.x += p.vx * dt * 52
@@ -146,7 +185,7 @@ export function CursorStarTrail() {
       window.removeEventListener('resize', resize)
       window.removeEventListener('pointermove', onMove)
       cancelAnimationFrame(rafRef.current)
-      particles.current = []
+      poolRef.current = null
     }
   }, [reduced])
 

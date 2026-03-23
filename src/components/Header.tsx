@@ -25,9 +25,16 @@ export function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-5 md:px-10">
         <a
           href="#home"
-          className="font-serif text-lg font-light tracking-wide text-white md:text-xl"
+          className="flex shrink-0 items-center rounded-full outline-none ring-offset-2 ring-offset-[#050505]/80 transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-amber-200/35"
         >
-          DIKIY PERFUME
+          <img
+            src="/logo-dikiy.webp"
+            alt="DikiY Perfume"
+            width={64}
+            height={64}
+            decoding="async"
+            className="h-12 w-12 rounded-full object-cover shadow-[0_0_0_1px_rgba(255,255,255,0.06)] md:h-16 md:w-16"
+          />
         </a>
 
         <nav
