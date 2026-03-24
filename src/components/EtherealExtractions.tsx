@@ -1,4 +1,16 @@
-import { memo, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
+import { useLenis } from 'lenis/react'
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+  type Ref,
+} from 'react'
 
 /**
  * Якорь для ссылки с героя: Arabian Oud — на lg-сетке 4×N вторая карточка второго ряда.
@@ -24,6 +36,8 @@ type Product = {
   image: string
   offset: string
   cardId?: string
+  /** Длинный текст для модального окна (клик по карточке) */
+  detailBlurb?: string
 }
 
 /**
@@ -36,6 +50,8 @@ const products: Product[] = [
     notes: 'Essential Parfums',
     image: '/perfumes/Blue Talisman Ex Nihilo.png',
     offset: 'lg:translate-y-0',
+    detailBlurb:
+      'Древесно-ароматический парфюм Essential Parfums: зелёный шалфей, кедр и нота «чёрного чая» создают сухой, элегантный силуэт. Создан Кентином Бишем — минималистичная бутылка и чистый, современный характер для повседневной роскоши.',
   },
   {
     name: 'Sauvage Dior',
@@ -43,24 +59,32 @@ const products: Product[] = [
     image: '/perfumes/Bois-Imperial-Essential-Parfums.png',
     offset: 'lg:translate-y-14',
     cardId: SAUVAGE_DIOR_CARD_ID,
+    detailBlurb:
+      'Культовый «дикий» свежий аромат: бергамот Калабрии, пряные перцы и глубокий амброксан. Мужественный, узнаваемый силуэт для дня и вечера — современная классика Dior.',
   },
   {
     name: 'Blue Talisman Ex Nihilo',
     notes: 'Ex Nihilo',
     image: '/perfumes/Bvlgari.png',
     offset: 'lg:translate-y-6',
+    detailBlurb:
+      'Парижский модерн и чистые аккорды: цитрус, ароматические ноты и древесно-мускусная база. Лёгкий, элегантный характер — как второй слой на коже, без лишней тяжести.',
   },
   {
     name: 'Creed Aventus',
     notes: 'Creed',
     image: '/perfumes/Christian Dior Sauvage.png',
     offset: 'lg:translate-y-10',
+    detailBlurb:
+      'Легендарный фруктово-древесный букет: ананас, чёрная смородина, берёза и дымный шлейф. Символ силы и уверенности — один из самых узнаваемых люксовых ароматов в мире.',
   },
   {
     name: 'Intriga Devil',
     notes: 'DikiY Perfume',
     image: '/perfumes/creed-aventus.png',
     offset: 'lg:-translate-y-2',
+    detailBlurb:
+      'Домашняя линия DikiY Perfume: соблазнительный восточный или древесно-пряный характер с тёплой базой. Для тех, кто любит глубину, стойкость и «интригу» в шлейфе.',
   },
   {
     name: 'Arabian Oud Madawi Gold',
@@ -68,36 +92,48 @@ const products: Product[] = [
     image: '/perfumes/Devils Intrigue.png',
     offset: 'lg:translate-y-16',
     cardId: ARABIAN_OUD_MADAWI_CARD_ID,
+    detailBlurb:
+      'Роскошный восточный букет: роза, фруктовые аккорды и благородный уд. Сладковато-пудровый, плотный шлейф в духе арабской парфюмерии — праздник и статус в одном флаконе.',
   },
   {
     name: 'Marc-Antoine Barrois Tilia',
     notes: 'Marc-Antoine Barrois',
     image: '/perfumes/Escentric Molecules Molecule 02.png',
     offset: 'lg:translate-y-0',
+    detailBlurb:
+      'Солнечный цветочно-древесный аромат: лайм, инжир, липовый цвет и кедр. Прозрачный, но тёплый — как летний сад в Провансе, утончённо и по-французски.',
   },
   {
     name: 'Louis Vuitton Symphony',
     notes: 'Louis Vuitton',
     image: '/perfumes/ganymede.png',
     offset: 'lg:translate-y-14',
+    detailBlurb:
+      'Свежая энергия от Жака Кавалье: имбирь, грейпфрут и лёгкая древесность. Бодрящий, «дорожный» люкс LV — чистый, современный и универсальный для любого сезона.',
   },
   {
     name: 'Ombre Nomade Louis Vuitton',
     notes: 'Louis Vuitton',
     image: '/perfumes/Initio SIDE EFFECT.png',
     offset: 'lg:translate-y-6',
+    detailBlurb:
+      'Глубокий восточный люкс: уд, бензоин, пряности и кожаный оттенок. Тёмный, медитативный шлейф — аромат для вечера и особых моментов, без компромиссов по стойкости.',
   },
   {
     name: 'Tiziana Terenzi Kirke',
     notes: 'Tiziana Terenzi',
     image: '/perfumes/Louis Vuitton Ombre Nomade.png',
     offset: 'lg:translate-y-10',
+    detailBlurb:
+      'Фруктово-мускусная сказка: маракуйя, персик, малина и мягкая ванильно-древесная база. Сияющий, «сочный» унисекс — праздник на коже и один из хитов итальянского дома.',
   },
   {
     name: 'Imagination Louis Vuitton',
     notes: 'Louis Vuitton',
     image: '/perfumes/louis-vuitton-imagination.png',
     offset: 'lg:-translate-y-2',
+    detailBlurb:
+      'Светлый цитрусово-амбровый рисунок: чёрный чай, амбра, гваяковое дерево и свежие цитрусы. Утончённый, «воздушный» LV — интеллигентная росковь без крика.',
   },
   {
     name: 'Initio Side Effect',
@@ -105,32 +141,49 @@ const products: Product[] = [
     image: '/perfumes/initio-side-effect.png',
     offset: 'lg:translate-y-16',
     cardId: INITIO_SIDE_EFFECT_CARD_ID,
+    detailBlurb:
+      'Гурманско-пряный взрыв: ром, ваниль, корица и табак. Сладкий, обволакивающий и невероятно стойкий — для тех, кто хочет оставить след в комнате и в памяти.',
   },
   {
     name: "Louis Vuitton L'Immensité",
     notes: 'Louis Vuitton',
     image: '/perfumes/louis-vuitton-symphony.png',
     offset: 'lg:translate-y-0',
+    detailBlurb:
+      'Бесконечная свежесть: грейпфрут, имбирь, амброксан и чистая древесность. Морской, просторный характер — как окно в открытое небо, минимализм и сила LV.',
   },
   {
     name: 'Marc-Antoine Barrois Ganymede',
     notes: 'Marc-Antoine Barrois',
     image: '/perfumes/madawi.png',
     offset: 'lg:translate-y-14',
+    detailBlurb:
+      'Минерально-цитрусовый футуризм: мандарин, шафран, замша и «мокрый» камень. Уникальный унисекс — интеллектуальный, современный и легко узнаваемый с первых нот.',
   },
   {
     name: 'Le Gemme Tygar Bvlgari',
     notes: 'Bvlgari',
     image: '/perfumes/tilia.png',
     offset: 'lg:translate-y-6',
+    detailBlurb:
+      'Линия Le Gemme: яркий грейпфрут, амбровое дерево и сухой древесный шлейф. Солнечная сила и итальянская росковь — брутальный свежий люкс для уверенного входа.',
   },
   {
     name: 'Escentric Molecules Molecule 02',
     notes: 'Escentric Molecules',
     image: '/perfumes/Tiziana Terenzi Kirke.png',
     offset: 'lg:translate-y-10',
+    detailBlurb:
+      'Чистый амброксан: один молекулярный компонент, который по-разному раскрывается на каждой коже. «Облако» шлейфа, почти невидимый старт и магнетизм на расстоянии — минимализм Escentric.',
   },
 ]
+
+/** Текст в fly-модалке: свой `detailBlurb` или один общий шаблон без дублирования разметки */
+function productFlyDescription(p: Product): string {
+  const extra = p.detailBlurb?.trim()
+  if (extra) return extra
+  return `${p.name} — ${p.notes}. Оригинальные и масляные духи в подборке DikiY Perfume. Объём и наличие уточняйте при заказе.`
+}
 
 const volumeOptions = ['10 мл', '20 мл', '30 мл', '50 мл'] as const
 
@@ -181,16 +234,60 @@ function RevealOnScroll({
   )
 }
 
+const COLLECTION_SECTION_TITLE = 'Коллекция'
+
+function collectionTitleLetterClass(i: number, activeIndex: number | null): string {
+  const base = 'collection-title-gradient-char'
+  if (activeIndex === null) return base
+  const dist = Math.abs(i - activeIndex)
+  if (dist === 0) return `${base} ${base}--active`
+  if (dist === 1) return `${base} ${base}--neighbor`
+  return base
+}
+
+/** Заголовок: подсветка буквы под курсором + соседи слабее; сброс при уходе со слова. */
+const CollectionTitleHeading = memo(function CollectionTitleHeading() {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+
+  return (
+    <h2
+      aria-label={COLLECTION_SECTION_TITLE}
+      className="collection-title-gradient-group w-fit cursor-default font-serif text-[clamp(3rem,12vw,7.5rem)] font-light uppercase leading-[0.92] tracking-[0.04em] md:tracking-[0.06em]"
+    >
+      <span
+        aria-hidden="true"
+        className="inline-block"
+        onMouseLeave={() => setActiveIndex(null)}
+      >
+        {COLLECTION_SECTION_TITLE.split('').map((char, i) => (
+          <span
+            key={`collection-letter-${i}`}
+            className={collectionTitleLetterClass(i, activeIndex)}
+            onMouseEnter={() => setActiveIndex(i)}
+          >
+            {char}
+          </span>
+        ))}
+      </span>
+    </h2>
+  )
+})
+
 /** Фото заполняет прямоугольник карточки (object-cover), края совпадают со скруглением. */
 const ProductCard = memo(function ProductCard({
   name,
   image,
   photoFrameId,
+  imageRef,
+  hideImage,
 }: {
   name: string
   image: string
   /** Якорь для обводки по рамке фото (2-я / 3-я голограмма). */
   photoFrameId?: string
+  imageRef?: Ref<HTMLImageElement | null>
+  /** Скрыть фото на карточке, пока летит клон в модалке */
+  hideImage?: boolean
 }) {
   return (
     <div
@@ -203,17 +300,103 @@ const ProductCard = memo(function ProductCard({
       >
         <div className="relative w-full aspect-[3/4]">
           <img
+            ref={imageRef}
             src={image}
             alt={name}
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.045]"
+            className={`absolute inset-0 h-full w-full object-cover object-center transition-[transform,opacity] duration-500 ease-out group-hover:scale-[1.045] ${hideImage ? 'opacity-0' : 'opacity-100'}`}
           />
         </div>
       </div>
     </div>
   )
 })
+
+const FLY_MODAL_TRANSITION_MS = 680
+
+type FlyRect = { top: number; left: number; width: number; height: number }
+
+function rectToFlyRect(r: DOMRect): FlyRect {
+  return { top: r.top, left: r.left, width: r.width, height: r.height }
+}
+
+/** Только размеры финального фото в модалке (позицию даёт групповое центрирование). */
+function getFlyFinalImageSize(from: FlyRect): { width: number; height: number } {
+  const vw = typeof window !== 'undefined' ? window.innerWidth : 400
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 800
+  /* Максимально крупное фото в модалке */
+  const maxW = Math.min(vw - 32, 760)
+  const maxH = vh * 0.82
+  const aspect = from.width / from.height
+  let finalW = maxW
+  let finalH = finalW / aspect
+  if (finalH > maxH) {
+    finalH = maxH
+    finalW = finalH * aspect
+  }
+  return { width: finalW, height: finalH }
+}
+
+const FLY_MODAL_GAP = 18
+const FLY_TEXT_MIN_W = 200
+const FLY_TEXT_MAX_W = 448
+/** Оценка высоты колонки (текст + кнопка) для вертикального центрирования группы */
+const FLY_TEXT_COLUMN_EST_H = 400
+
+type FlyGroupLayout =
+  | {
+      mode: 'row'
+      img: FlyRect
+      text: { left: number; bottom: number; width: number }
+    }
+  | {
+      mode: 'stack'
+      img: FlyRect
+      text: { left: number; top: number; width: number }
+    }
+
+/** Картинка + текст + кнопка одной группой по центру экрана */
+function getFlyGroupLayout(imgW: number, imgH: number): FlyGroupLayout {
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+  const gap = FLY_MODAL_GAP
+  let textW = Math.min(FLY_TEXT_MAX_W, vw - imgW - gap - 40)
+
+  if (textW < FLY_TEXT_MIN_W) {
+    const colW = Math.min(FLY_TEXT_MAX_W, Math.max(imgW, 280), vw - 32)
+    const totalH = imgH + 16 + FLY_TEXT_COLUMN_EST_H
+    let imgTop = (vh - totalH) / 2 - 24
+    if (imgTop < 16) imgTop = 16
+    const imgLeft = (vw - imgW) / 2
+    return {
+      mode: 'stack',
+      img: { left: imgLeft, top: imgTop, width: imgW, height: imgH },
+      text: {
+        left: (vw - colW) / 2,
+        top: imgTop + imgH + 16,
+        width: colW,
+      },
+    }
+  }
+
+  const groupW = imgW + gap + textW
+  const groupH = Math.max(imgH, FLY_TEXT_COLUMN_EST_H)
+  const groupLeft = (vw - groupW) / 2
+  const groupTop = (vh - groupH) / 2 - 24
+  const safeGroupTop = Math.max(12, groupTop)
+
+  const imgLeft = groupLeft
+  const imgTop = safeGroupTop + groupH - imgH
+  const textLeft = groupLeft + imgW + gap
+  const textBottom = Math.max(12, vh - safeGroupTop - groupH)
+
+  return {
+    mode: 'row',
+    img: { left: imgLeft, top: imgTop, width: imgW, height: imgH },
+    text: { left: textLeft, bottom: textBottom, width: textW },
+  }
+}
 
 const PHOTO_FRAME_FLASH_BY_CARD: Record<string, { frameId: string; className: string }> = {
   [ARABIAN_OUD_MADAWI_CARD_ID]: {
@@ -289,7 +472,94 @@ function scheduleProductCardFlash(cardId: string) {
 }
 
 export function EtherealExtractions() {
+  const lenis = useLenis()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const cardImageRefs = useRef<(HTMLImageElement | null)[]>(
+    Array.from({ length: products.length }, () => null),
+  )
+  const flyCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const cardImageRefCallbacks = useMemo(
+    () =>
+      products.map(
+        (_, i) => (el: HTMLImageElement | null) => {
+          cardImageRefs.current[i] = el
+        },
+      ),
+    [],
+  )
+
+  const [flyModal, setFlyModal] = useState<null | {
+    product: Product
+    description: string
+    from: FlyRect
+  }>(null)
+  const [flyExpanded, setFlyExpanded] = useState(false)
+
+  const flyImageSize = useMemo(
+    () => (flyModal ? getFlyFinalImageSize(flyModal.from) : null),
+    [flyModal],
+  )
+
+  const flyGroupLayout = useMemo(() => {
+    if (!flyModal || !flyImageSize || typeof window === 'undefined') return null
+    return getFlyGroupLayout(flyImageSize.width, flyImageSize.height)
+  }, [flyModal, flyImageSize])
+
+  const closeFlyModal = useCallback(() => {
+    setFlyExpanded(false)
+    if (flyCloseTimerRef.current) clearTimeout(flyCloseTimerRef.current)
+    flyCloseTimerRef.current = window.setTimeout(() => {
+      setFlyModal(null)
+      flyCloseTimerRef.current = null
+    }, FLY_MODAL_TRANSITION_MS)
+  }, [])
+
+  const openFlyModal = useCallback((product: Product, description: string, from: DOMRect) => {
+    if (flyCloseTimerRef.current) {
+      clearTimeout(flyCloseTimerRef.current)
+      flyCloseTimerRef.current = null
+    }
+    setFlyModal({
+      product,
+      description,
+      from: rectToFlyRect(from),
+    })
+    setFlyExpanded(false)
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      setFlyExpanded(true)
+    } else {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setFlyExpanded(true))
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!flyModal) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeFlyModal()
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [flyModal, closeFlyModal])
+
+  /** Fly-модалка и окно «Купить»: блок скролла страницы + остановка Lenis */
+  const modalScrollLocked = flyModal !== null || selectedProduct !== null
+  useEffect(() => {
+    if (!modalScrollLocked) return
+    const prevHtmlOverflow = document.documentElement.style.overflow
+    const prevBodyOverflow = document.body.style.overflow
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+    lenis?.stop()
+    return () => {
+      document.documentElement.style.overflow = prevHtmlOverflow
+      document.body.style.overflow = prevBodyOverflow
+      lenis?.start()
+    }
+  }, [modalScrollLocked, lenis])
 
   useEffect(() => {
     const onFlashEvent = (e: Event) => {
@@ -316,12 +586,7 @@ export function EtherealExtractions() {
       if (event.key === 'Escape') setSelectedProduct(null)
     }
     document.addEventListener('keydown', onKeyDown)
-    const prevOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      document.body.style.overflow = prevOverflow
-    }
+    return () => document.removeEventListener('keydown', onKeyDown)
   }, [selectedProduct])
 
   return (
@@ -358,9 +623,7 @@ export function EtherealExtractions() {
         <div className="relative z-[1] mx-auto max-w-7xl">
           <div className="mb-20 lg:mb-28">
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:gap-x-5 md:gap-x-8 lg:gap-x-10">
-              <h2 className="font-serif text-[clamp(3rem,12vw,7.5rem)] font-light uppercase leading-[0.92] tracking-[0.04em] text-white md:tracking-[0.06em]">
-                Коллекция
-              </h2>
+              <CollectionTitleHeading />
               <p className="max-w-[min(100%,20rem)] font-sans text-base font-light uppercase leading-snug tracking-[0.14em] text-white/55 sm:max-w-xs sm:pb-1.5 md:text-lg md:leading-snug md:tracking-[0.16em]">
                 оригинальные и масляные духи
               </p>
@@ -372,12 +635,20 @@ export function EtherealExtractions() {
               <article
                 key={p.image}
                 id={p.cardId}
-                className={`flex h-full min-h-0 flex-col ${p.offset}`}
+                className={`flex h-full min-h-0 cursor-pointer flex-col ${p.offset}`}
+                onClick={(e) => {
+                  if ((e.target as HTMLElement).closest('button')) return
+                  const img = cardImageRefs.current[index]
+                  if (!img) return
+                  openFlyModal(p, productFlyDescription(p), img.getBoundingClientRect())
+                }}
               >
                 <RevealOnScroll columnIndex={index}>
                   <ProductCard
                     name={p.name}
                     image={p.image}
+                    imageRef={cardImageRefCallbacks[index]}
+                    hideImage={Boolean(flyModal && flyModal.product.image === p.image)}
                     photoFrameId={
                       p.cardId === ARABIAN_OUD_MADAWI_CARD_ID
                         ? ARABIAN_OUD_MADAWI_PHOTO_FRAME_ID
@@ -408,9 +679,83 @@ export function EtherealExtractions() {
                 </RevealOnScroll>
               </article>
             ))}
-          </div>
         </div>
-      </section>
+      </div>
+    </section>
+
+      {flyModal &&
+        flyGroupLayout &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="collection-fly-product-title"
+            className="fixed inset-0 z-[240]"
+          >
+            <div
+              role="presentation"
+              className="absolute inset-0 cursor-pointer bg-black/55 transition-opacity duration-500 ease-out"
+              style={{
+                opacity: flyExpanded ? 1 : 0,
+                backdropFilter: flyExpanded ? 'blur(24px) saturate(1.12)' : 'blur(0px)',
+                WebkitBackdropFilter: flyExpanded ? 'blur(24px) saturate(1.12)' : 'blur(0px)',
+              }}
+              onClick={closeFlyModal}
+            />
+            <img
+              src={flyModal.product.image}
+              alt=""
+              className="fixed z-[241] cursor-default rounded-xl object-cover shadow-[0_28px_100px_rgba(0,0,0,0.75)] ring-1 ring-white/12 transition-[top,left,width,height] duration-[680ms] ease-[cubic-bezier(0.22,1,0.32,1)] motion-reduce:!transition-none motion-reduce:duration-0"
+              style={{
+                top: flyExpanded ? flyGroupLayout.img.top : flyModal.from.top,
+                left: flyExpanded ? flyGroupLayout.img.left : flyModal.from.left,
+                width: flyExpanded ? flyGroupLayout.img.width : flyModal.from.width,
+                height: flyExpanded ? flyGroupLayout.img.height : flyModal.from.height,
+              }}
+              aria-hidden
+            />
+            <div
+              className="fixed z-[242] cursor-default text-left transition-opacity duration-500 ease-out motion-reduce:!transition-none motion-reduce:duration-0"
+              style={{
+                left: `${flyGroupLayout.text.left}px`,
+                width: `${flyGroupLayout.text.width}px`,
+                ...(flyGroupLayout.mode === 'row'
+                  ? {
+                      bottom: `${flyGroupLayout.text.bottom}px`,
+                      top: 'auto',
+                    }
+                  : {
+                      top: `${flyGroupLayout.text.top}px`,
+                      bottom: 'auto',
+                    }),
+                opacity: flyExpanded ? 1 : 0,
+                transitionDelay: flyExpanded ? '200ms' : '0ms',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <p className="font-sans text-[10px] tracking-[0.22em] text-amber-200/55 uppercase">
+                {flyModal.product.notes}
+              </p>
+              <h2
+                id="collection-fly-product-title"
+                className="mt-2 font-serif text-2xl font-light text-white md:text-3xl"
+              >
+                {flyModal.product.name}
+              </h2>
+              <p className="mt-4 font-sans text-[15px] leading-relaxed text-white/82 md:text-base">
+                {flyModal.description}
+              </p>
+              <button
+                type="button"
+                onClick={closeFlyModal}
+                className="mt-8 rounded-full border border-white/20 bg-white/[0.06] px-8 py-3 font-sans text-[10px] tracking-[0.2em] text-white/90 uppercase transition-colors hover:border-amber-200/40 hover:bg-white/[0.1]"
+              >
+                Закрыть
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )}
 
       <div
         className={`fixed inset-0 z-[120] flex items-center justify-center px-6 transition-all duration-300 ${
@@ -435,10 +780,14 @@ export function EtherealExtractions() {
             selectedProduct ? `Выбор объема для ${selectedProduct.name}` : 'Выбор объема'
           }
           className={`relative w-full max-w-md rounded-2xl border border-white/15 bg-[#101010] p-6 shadow-[0_28px_80px_-30px_rgba(0,0,0,0.9)] transition-all duration-300 md:p-7 ${
-            selectedProduct ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-95 opacity-0'
+            selectedProduct
+              ? 'translate-y-[-2.25rem] scale-100 opacity-100 md:translate-y-[-3rem]'
+              : 'translate-y-4 scale-95 opacity-0'
           }`}
         >
-          <p className="font-sans text-[10px] tracking-[0.2em] text-white/45 uppercase">Купить</p>
+          <p className="font-sans text-[10px] tracking-[0.2em] text-white/45 uppercase">
+            Купить
+          </p>
           <h3 className="mt-3 font-serif text-2xl font-light text-white">
             {selectedProduct?.name ?? 'Выберите объем'}
           </h3>

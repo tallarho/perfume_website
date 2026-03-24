@@ -10,7 +10,7 @@ const LOADER_BG_LAYERS = `
   linear-gradient(172deg, #221e1b 0%, #181512 32%, #100e0c 68%, #080706 100%)
 `
 
-const PREFETCH_URLS = ['/logo-dikiy.webp'] as const
+const PREFETCH_URLS = ['/logo-dikiy.png'] as const
 
 function waitWindowLoad(): Promise<void> {
   if (document.readyState === 'complete') return Promise.resolve()

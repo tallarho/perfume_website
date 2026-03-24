@@ -22,18 +22,18 @@ const nav = [
 export function Header() {
   return (
     <header className="header-enter fixed top-0 right-0 left-0 z-50 border-b border-amber-100/[0.07] bg-[#050505]/58 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl backdrop-saturate-150">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-5 md:px-10">
+      <div className="mx-auto flex h-[5.25rem] max-w-7xl items-center justify-between gap-6 px-6 py-2 md:h-[6.25rem] md:px-10 md:py-2.5">
         <a
           href="#home"
           className="flex shrink-0 items-center rounded-full outline-none ring-offset-2 ring-offset-[#050505]/80 transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-amber-200/35"
         >
           <img
-            src="/logo-dikiy.webp"
+            src="/logo-dikiy.png"
             alt="DikiY Perfume"
-            width={64}
-            height={64}
+            width={140}
+            height={180}
             decoding="async"
-            className="h-12 w-12 rounded-full object-cover shadow-[0_0_0_1px_rgba(255,255,255,0.06)] md:h-16 md:w-16"
+            className="h-[3.25rem] w-auto object-contain object-left md:h-[4.25rem]"
           />
         </a>
 

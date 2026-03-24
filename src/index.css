@@ -401,3 +401,57 @@ html[data-product-flash-lock] .product-card-glow:not(.product-card-glow--flash-t
   }
 }
 
+/* Заголовок «Коллекция»: буква под курсором + соседи слабее */
+.collection-title-gradient-char {
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  /* Без отрицательных margin — иначе сосед перехватывает hover и «центр» оказывается neighbor */
+  padding: 0.1em 0;
+  margin: 0;
+  background-image: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #f2ebe0 22%,
+    #e8d19a 40%,
+    #d4af5f 50%,
+    #e8d19a 60%,
+    #f5f0e8 78%,
+    #ffffff 100%
+  );
+  background-size: 280% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Выход курсора: быстрее возвращаем градиент в «спокойное» положение */
+  transition: background-position 0.45s ease-out;
+}
+
+/* Буква под курсором — сдвиг, при котором золото в кадре (100% уводит блик за край при size 280%) */
+.collection-title-gradient-char--active {
+  z-index: 2;
+  background-position: 64% 50%;
+  transition: background-position 0.65s cubic-bezier(0.22, 1, 0.32, 1);
+}
+
+/* Соседи: тот же градиент, слабее — ближе к «спокойному» белому */
+.collection-title-gradient-char--neighbor {
+  z-index: 1;
+  background-position: 40% 50%;
+  transition: background-position 0.65s cubic-bezier(0.22, 1, 0.32, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-title-gradient-char,
+  .collection-title-gradient-char--active,
+  .collection-title-gradient-char--neighbor {
+    transition: none;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    background-position: unset;
+    color: #ffffff;
+  }
+}
+
