@@ -414,7 +414,7 @@ function HologramSwitch({
 }) {
   return (
     <div
-      className="pointer-events-auto flex shrink-0 flex-col gap-1 rounded-full border border-amber-200/16 bg-[#070707]/78 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-md"
+      className="pointer-events-auto flex shrink-0 flex-row items-center gap-0.5 rounded-full border border-amber-200/16 bg-[#070707]/78 p-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] backdrop-blur-md sm:gap-1 sm:p-1 lg:flex-col"
       role="radiogroup"
       aria-label="Переключение голограммы парфюма"
     >
@@ -428,14 +428,14 @@ function HologramSwitch({
             aria-checked={on}
             title={title}
             onClick={() => onSelect(i)}
-            className={`relative flex h-11 w-11 items-center justify-center rounded-full font-serif text-sm font-light tracking-wide transition-[color,background-color,box-shadow] duration-300 md:h-12 md:w-12 ${
+            className={`relative flex h-9 w-9 items-center justify-center rounded-full font-serif text-sm font-light tracking-wide transition-[color,background-color,box-shadow] duration-300 sm:h-10 sm:w-10 md:h-12 md:w-12 ${
               on
                 ? 'bg-amber-200/[0.14] text-amber-50 shadow-[0_0_20px_-4px_rgba(212,175,95,0.45)]'
                 : 'text-white/45 hover:bg-white/[0.06] hover:text-white/75'
             }`}
           >
             <span className="sr-only">{title}</span>
-            <span aria-hidden className="text-[13px] md:text-[14px]">
+            <span aria-hidden className="text-[11px] sm:text-[12px] md:text-[14px]">
               {i + 1}
             </span>
           </button>
@@ -505,7 +505,7 @@ export function Hero() {
         </div>
 
         <div className="pointer-events-none relative flex w-full flex-1 flex-col items-center justify-center gap-6 sm:flex-row sm:items-center sm:justify-center sm:gap-10 md:gap-12 lg:min-h-[min(70vh,36rem)] lg:max-w-none lg:flex-row lg:justify-end lg:gap-20 xl:gap-24 lg:pr-0">
-          <div className="relative isolate mx-auto aspect-[3/5] w-full max-w-[min(100%,21.5rem)] shrink-0 translate-x-14 sm:max-w-[22rem] sm:translate-x-18 md:max-w-[24.5rem] md:translate-x-24 lg:mx-0 lg:max-w-none lg:w-[min(100%,28rem)] lg:translate-x-32 xl:translate-x-44 2xl:translate-x-56">
+          <div className="relative isolate mx-auto aspect-[3/5] w-full max-w-[min(100%,20.75rem)] shrink-0 translate-x-0 sm:max-w-[22rem] sm:translate-x-2 md:max-w-[24.5rem] md:translate-x-8 lg:mx-0 lg:max-w-none lg:w-[min(100%,28rem)] lg:translate-x-32 xl:translate-x-44 2xl:translate-x-56">
             {heroHologramVariants.map((v, i) => (
               <HeroHologramLayer
                 key={v.cardId}
@@ -517,7 +517,7 @@ export function Hero() {
             ))}
           </div>
 
-          <div className="pointer-events-auto ml-2 shrink-0 sm:ml-10 md:ml-14 lg:ml-20 xl:ml-28 2xl:ml-36 lg:translate-x-[5cm]">
+          <div className="pointer-events-auto -mt-5 ml-0 shrink-0 sm:mt-0 sm:ml-8 md:ml-12 lg:ml-20 xl:ml-28 2xl:ml-36 lg:translate-x-[5cm]">
             <HologramSwitch
               activeIndex={hologramIndex}
               onSelect={setHologramIndex}
@@ -529,17 +529,17 @@ export function Hero() {
 
       <a
         href="#collections"
-        className="hero-reveal hero-reveal-delay-3 absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3 text-white/38 transition-colors hover:text-white/65 md:bottom-10"
+        className="hero-reveal hero-reveal-delay-3 absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2.5 text-white/38 transition-colors hover:text-white/65 md:bottom-9"
         aria-label="Перейти к коллекциям"
       >
         <span
-          className="font-sans text-[9px] tracking-[0.35em] uppercase"
+          className="font-sans text-[7px] tracking-[0.28em] uppercase"
           style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
         >
           Далее
         </span>
         <span
-          className="block h-14 w-px bg-gradient-to-b from-amber-200/45 to-transparent"
+          className="block h-12 w-px bg-gradient-to-b from-amber-200/45 to-transparent"
           aria-hidden
         />
       </a>

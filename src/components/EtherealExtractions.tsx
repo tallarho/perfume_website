@@ -38,6 +38,8 @@ type Product = {
   cardId?: string
   /** Длинный текст для модального окна (клик по карточке) */
   detailBlurb?: string
+  /** Пять нот пирамиды в модалке — сверху вниз (от верха к базе) */
+  pyramidNotes: readonly [string, string, string, string, string]
 }
 
 /**
@@ -52,6 +54,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-0',
     detailBlurb:
       'Древесно-ароматический парфюм Essential Parfums: зелёный шалфей, кедр и нота «чёрного чая» создают сухой, элегантный силуэт. Создан Кентином Бишем — минималистичная бутылка и чистый, современный характер для повседневной роскоши.',
+    pyramidNotes: ['шалфей', 'чёрный чай', 'кедр', 'базилик', 'ветивер'],
   },
   {
     name: 'Sauvage Dior',
@@ -61,6 +64,7 @@ const products: Product[] = [
     cardId: SAUVAGE_DIOR_CARD_ID,
     detailBlurb:
       'Культовый «дикий» свежий аромат: бергамот Калабрии, пряные перцы и глубокий амброксан. Мужественный, узнаваемый силуэт для дня и вечера — современная классика Dior.',
+    pyramidNotes: ['бергамот', 'перец', 'лаванда', 'амброксан', 'пачули'],
   },
   {
     name: 'Blue Talisman Ex Nihilo',
@@ -69,6 +73,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-6',
     detailBlurb:
       'Парижский модерн и чистые аккорды: цитрус, ароматические ноты и древесно-мускусная база. Лёгкий, элегантный характер — как второй слой на коже, без лишней тяжести.',
+    pyramidNotes: ['цитрус', 'ароматика', 'цветы', 'мускус', 'древесность'],
   },
   {
     name: 'Creed Aventus',
@@ -77,6 +82,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-10',
     detailBlurb:
       'Легендарный фруктово-древесный букет: ананас, чёрная смородина, берёза и дымный шлейф. Символ силы и уверенности — один из самых узнаваемых люксовых ароматов в мире.',
+    pyramidNotes: ['ананас', 'смородина', 'дубовый мох', 'берёза', 'мускус'],
   },
   {
     name: 'Intriga Devil',
@@ -85,6 +91,7 @@ const products: Product[] = [
     offset: 'lg:-translate-y-2',
     detailBlurb:
       'Домашняя линия DikiY Perfume: соблазнительный восточный или древесно-пряный характер с тёплой базой. Для тех, кто любит глубину, стойкость и «интригу» в шлейфе.',
+    pyramidNotes: ['цитрус', 'пряности', 'роза', 'уд', 'ваниль'],
   },
   {
     name: 'Arabian Oud Madawi Gold',
@@ -94,6 +101,7 @@ const products: Product[] = [
     cardId: ARABIAN_OUD_MADAWI_CARD_ID,
     detailBlurb:
       'Роскошный восточный букет: роза, фруктовые аккорды и благородный уд. Сладковато-пудровый, плотный шлейф в духе арабской парфюмерии — праздник и статус в одном флаконе.',
+    pyramidNotes: ['фрукты', 'роза', 'шафран', 'уд', 'мускус'],
   },
   {
     name: 'Marc-Antoine Barrois Tilia',
@@ -102,6 +110,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-0',
     detailBlurb:
       'Солнечный цветочно-древесный аромат: лайм, инжир, липовый цвет и кедр. Прозрачный, но тёплый — как летний сад в Провансе, утончённо и по-французски.',
+    pyramidNotes: ['лайм', 'инжир', 'липовый цвет', 'мимоза', 'кедр'],
   },
   {
     name: 'Louis Vuitton Symphony',
@@ -110,6 +119,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-14',
     detailBlurb:
       'Свежая энергия от Жака Кавалье: имбирь, грейпфрут и лёгкая древесность. Бодрящий, «дорожный» люкс LV — чистый, современный и универсальный для любого сезона.',
+    pyramidNotes: ['грейпфрут', 'бергамот', 'имбирь', 'мускус', 'древесность'],
   },
   {
     name: 'Ombre Nomade Louis Vuitton',
@@ -118,6 +128,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-6',
     detailBlurb:
       'Глубокий восточный люкс: уд, бензоин, пряности и кожаный оттенок. Тёмный, медитативный шлейф — аромат для вечера и особых моментов, без компромиссов по стойкости.',
+    pyramidNotes: ['малина', 'бензоин', 'роза', 'уд', 'кожа'],
   },
   {
     name: 'Tiziana Terenzi Kirke',
@@ -126,6 +137,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-10',
     detailBlurb:
       'Фруктово-мускусная сказка: маракуйя, персик, малина и мягкая ванильно-древесная база. Сияющий, «сочный» унисекс — праздник на коже и один из хитов итальянского дома.',
+    pyramidNotes: ['маракуйя', 'персик', 'малина', 'ваниль', 'мускус'],
   },
   {
     name: 'Imagination Louis Vuitton',
@@ -134,6 +146,7 @@ const products: Product[] = [
     offset: 'lg:-translate-y-2',
     detailBlurb:
       'Светлый цитрусово-амбровый рисунок: чёрный чай, амбра, гваяковое дерево и свежие цитрусы. Утончённый, «воздушный» LV — интеллигентная росковь без крика.',
+    pyramidNotes: ['цитрусы', 'чёрный чай', 'амбра', 'гваяк', 'кедр'],
   },
   {
     name: 'Initio Side Effect',
@@ -143,6 +156,7 @@ const products: Product[] = [
     cardId: INITIO_SIDE_EFFECT_CARD_ID,
     detailBlurb:
       'Гурманско-пряный взрыв: ром, ваниль, корица и табак. Сладкий, обволакивающий и невероятно стойкий — для тех, кто хочет оставить след в комнате и в памяти.',
+    pyramidNotes: ['корица', 'ром', 'ваниль', 'табак', 'какао'],
   },
   {
     name: "Louis Vuitton L'Immensité",
@@ -151,6 +165,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-0',
     detailBlurb:
       'Бесконечная свежесть: грейпфрут, имбирь, амброксан и чистая древесность. Морской, просторный характер — как окно в открытое небо, минимализм и сила LV.',
+    pyramidNotes: ['грейпфрут', 'имбирь', 'амброксан', 'ладан', 'древесность'],
   },
   {
     name: 'Marc-Antoine Barrois Ganymede',
@@ -159,6 +174,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-14',
     detailBlurb:
       'Минерально-цитрусовый футуризм: мандарин, шафран, замша и «мокрый» камень. Уникальный унисекс — интеллектуальный, современный и легко узнаваемый с первых нот.',
+    pyramidNotes: ['мандарин', 'шафран', 'фиалка', 'минералы', 'замша'],
   },
   {
     name: 'Le Gemme Tygar Bvlgari',
@@ -167,6 +183,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-6',
     detailBlurb:
       'Линия Le Gemme: яркий грейпфрут, амбровое дерево и сухой древесный шлейф. Солнечная сила и итальянская росковь — брутальный свежий люкс для уверенного входа.',
+    pyramidNotes: ['грейпфрут', 'амбра', 'серая амбра', 'древесина', 'элеми'],
   },
   {
     name: 'Escentric Molecules Molecule 02',
@@ -175,6 +192,7 @@ const products: Product[] = [
     offset: 'lg:translate-y-10',
     detailBlurb:
       'Чистый амброксан: один молекулярный компонент, который по-разному раскрывается на каждой коже. «Облако» шлейфа, почти невидимый старт и магнетизм на расстоянии — минимализм Escentric.',
+    pyramidNotes: ['амброксан', 'кожа', 'древесный шлейф', 'мускус', 'ваша кожа'],
   },
 ]
 
@@ -344,16 +362,24 @@ const FLY_TEXT_MAX_W = 448
 /** Оценка высоты колонки (текст + кнопка) для вертикального центрирования группы */
 const FLY_TEXT_COLUMN_EST_H = 400
 
+function flyNoteStripWidth(vw: number): number {
+  if (vw < 400) return 68
+  if (vw < 640) return 82
+  return 96
+}
+
 type FlyGroupLayout =
   | {
       mode: 'row'
       img: FlyRect
       text: { left: number; bottom: number; width: number }
+      noteStripW: number
     }
   | {
       mode: 'stack'
       img: FlyRect
       text: { left: number; top: number; width: number }
+      noteStripW: number
     }
 
 /** Картинка + текст + кнопка одной группой по центру экрана */
@@ -361,7 +387,8 @@ function getFlyGroupLayout(imgW: number, imgH: number): FlyGroupLayout {
   const vw = window.innerWidth
   const vh = window.innerHeight
   const gap = FLY_MODAL_GAP
-  let textW = Math.min(FLY_TEXT_MAX_W, vw - imgW - gap - 40)
+  const noteStripW = flyNoteStripWidth(vw)
+  let textW = Math.min(FLY_TEXT_MAX_W, vw - imgW - noteStripW - gap - 40)
 
   if (textW < FLY_TEXT_MIN_W) {
     const colW = Math.min(FLY_TEXT_MAX_W, Math.max(imgW, 280), vw - 32)
@@ -377,10 +404,11 @@ function getFlyGroupLayout(imgW: number, imgH: number): FlyGroupLayout {
         top: imgTop + imgH + 16,
         width: colW,
       },
+      noteStripW,
     }
   }
 
-  const groupW = imgW + gap + textW
+  const groupW = imgW + noteStripW + gap + textW
   const groupH = Math.max(imgH, FLY_TEXT_COLUMN_EST_H)
   const groupLeft = (vw - groupW) / 2
   const groupTop = (vh - groupH) / 2 - 24
@@ -388,14 +416,68 @@ function getFlyGroupLayout(imgW: number, imgH: number): FlyGroupLayout {
 
   const imgLeft = groupLeft
   const imgTop = safeGroupTop + groupH - imgH
-  const textLeft = groupLeft + imgW + gap
+  const textLeft = groupLeft + imgW + noteStripW + gap
   const textBottom = Math.max(12, vh - safeGroupTop - groupH)
 
   return {
     mode: 'row',
     img: { left: imgLeft, top: imgTop, width: imgW, height: imgH },
     text: { left: textLeft, bottom: textBottom, width: textW },
+    noteStripW,
   }
+}
+
+/** Вертикальная линия с маркерами — впритык справа от фото в fly-модалке */
+function FlyFragranceNotesStrip({
+  notes,
+  imgRect,
+  stripW,
+  flyExpanded,
+}: {
+  notes: readonly [string, string, string, string, string]
+  imgRect: FlyRect
+  stripW: number
+  flyExpanded: boolean
+}) {
+  return (
+    <div
+      className="fixed z-[241] pointer-events-none cursor-default select-none transition-[top,left,width,height] duration-[680ms] ease-[cubic-bezier(0.22,1,0.32,1)] motion-reduce:!transition-none motion-reduce:duration-0"
+      style={{
+        left: `${imgRect.left + imgRect.width}px`,
+        top: `${imgRect.top}px`,
+        width: `${stripW}px`,
+        height: `${imgRect.height}px`,
+      }}
+      role="group"
+      aria-label="Пирамида нот аромата, сверху вниз"
+    >
+      <div
+        className="relative h-full w-full py-1.5 pl-0.5 transition-opacity duration-500 ease-out motion-reduce:!transition-none motion-reduce:duration-0"
+        style={{
+          opacity: flyExpanded ? 1 : 0,
+          transitionDelay: flyExpanded ? '200ms' : '0ms',
+        }}
+      >
+        <div
+          aria-hidden
+          className="absolute top-2 bottom-2 left-[5px] w-px bg-gradient-to-b from-amber-200/55 via-amber-200/25 to-amber-200/50"
+        />
+        <div className="relative flex h-full flex-col justify-between">
+          {notes.map((note, i) => (
+            <div key={`${i}-${note}`} className="flex min-h-0 items-center gap-1.5">
+              <span
+                aria-hidden
+                className="relative z-[1] ml-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-200/90 shadow-[0_0_0_2px_rgba(0,0,0,0.35)]"
+              />
+              <span className="min-w-0 font-sans text-[8px] leading-[1.15] tracking-[0.05em] text-white/68 sm:text-[10px] sm:tracking-[0.06em]">
+                {note}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 const PHOTO_FRAME_FLASH_BY_CARD: Record<string, { frameId: string; className: string }> = {
@@ -630,12 +712,12 @@ export function EtherealExtractions() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-14 sm:grid-cols-2 sm:gap-12 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-16 lg:[grid-auto-rows:1fr]">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-2 sm:gap-12 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-16 lg:[grid-auto-rows:1fr]">
             {products.map((p, index) => (
               <article
                 key={p.image}
                 id={p.cardId}
-                className={`flex h-full min-h-0 cursor-pointer flex-col ${p.offset}`}
+                className={`product-grid-item flex h-full min-h-0 cursor-pointer flex-col ${p.offset}`}
                 onClick={(e) => {
                   if ((e.target as HTMLElement).closest('button')) return
                   const img = cardImageRefs.current[index]
@@ -713,6 +795,16 @@ export function EtherealExtractions() {
                 height: flyExpanded ? flyGroupLayout.img.height : flyModal.from.height,
               }}
               aria-hidden
+            />
+            <FlyFragranceNotesStrip
+              notes={flyModal.product.pyramidNotes}
+              imgRect={
+                flyExpanded
+                  ? flyGroupLayout.img
+                  : flyModal.from
+              }
+              stripW={flyGroupLayout.noteStripW}
+              flyExpanded={flyExpanded}
             />
             <div
               className="fixed z-[242] cursor-default text-left transition-opacity duration-500 ease-out motion-reduce:!transition-none motion-reduce:duration-0"

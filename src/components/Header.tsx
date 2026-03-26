@@ -37,16 +37,13 @@ export function Header() {
           />
         </a>
 
-        <nav
-          className="absolute left-1/2 hidden -translate-x-1/2 md:flex"
-          aria-label="Основное меню"
-        >
-          <ul className="flex gap-10">
+        <nav className="absolute left-1/2 flex -translate-x-1/2" aria-label="Основное меню">
+          <ul className="flex items-center gap-3 md:gap-10">
             {nav.map((item) => (
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className="text-[11px] font-medium tracking-[0.2em] text-white/70 uppercase transition-colors hover:text-white"
+                  className="text-[9px] font-medium tracking-[0.12em] text-white/68 uppercase transition-colors hover:text-white md:text-[11px] md:tracking-[0.2em] md:text-white/70"
                 >
                   {item.label}
                 </a>
@@ -55,7 +52,7 @@ export function Header() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             className="text-white/80 transition-colors hover:text-white"
@@ -65,21 +62,6 @@ export function Header() {
           </button>
         </div>
       </div>
-
-      <nav
-        className="flex justify-center gap-8 border-t border-white/[0.04] py-3 md:hidden"
-        aria-label="Мобильное меню"
-      >
-        {nav.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            className="text-[10px] font-medium tracking-[0.18em] text-white/60 uppercase"
-          >
-            {item.label}
-          </a>
-        ))}
-      </nav>
     </header>
   )
 }
