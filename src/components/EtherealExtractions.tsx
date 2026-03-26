@@ -1,14 +1,15 @@
 import { createPortal } from 'react-dom'
 import { useLenis } from 'lenis/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
   memo,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
-  type ReactNode,
   type Ref,
 } from 'react'
 
@@ -204,53 +205,6 @@ function productFlyDescription(p: Product): string {
 }
 
 const volumeOptions = ['10 мл', '20 мл', '30 мл', '50 мл'] as const
-
-/** Появление при скролле: лёгкий подъём + fade, задержка по колонке (волна в ряду). */
-function RevealOnScroll({
-  children,
-  columnIndex,
-}: {
-  children: ReactNode
-  columnIndex: number
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [inView, setInView] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) {
-      setInView(true)
-      return
-    }
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true)
-          io.unobserve(el)
-        }
-      },
-      { threshold: 0.07, rootMargin: '0px 0px -8% 0px' },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-
-  const delayMs = (columnIndex % 4) * 72
-
-  return (
-    <div
-      ref={ref}
-      className={inView ? 'product-reveal product-reveal--in' : 'product-reveal'}
-      style={{ '--reveal-delay': `${delayMs}ms` } as CSSProperties}
-    >
-      {children}
-    </div>
-  )
-}
 
 const COLLECTION_SECTION_TITLE = 'Коллекция'
 
@@ -559,6 +513,7 @@ export function EtherealExtractions() {
   const cardImageRefs = useRef<(HTMLImageElement | null)[]>(
     Array.from({ length: products.length }, () => null),
   )
+  const revealRefs = useRef<(HTMLDivElement | null)[]>(Array.from({ length: products.length }, () => null))
   const flyCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const cardImageRefCallbacks = useMemo(
@@ -566,6 +521,15 @@ export function EtherealExtractions() {
       products.map(
         (_, i) => (el: HTMLImageElement | null) => {
           cardImageRefs.current[i] = el
+        },
+      ),
+    [],
+  )
+  const revealRefCallbacks = useMemo(
+    () =>
+      products.map(
+        (_, i) => (el: HTMLDivElement | null) => {
+          revealRefs.current[i] = el
         },
       ),
     [],
@@ -671,6 +635,56 @@ export function EtherealExtractions() {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [selectedProduct])
 
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return
+    gsap.registerPlugin(ScrollTrigger)
+
+    const items = revealRefs.current.filter(Boolean) as HTMLDivElement[]
+    if (!items.length) return
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      gsap.set(items, { opacity: 1, y: 0, clearProps: 'transform,opacity,willChange' })
+      return
+    }
+
+    // Изначально: только opacity + translate3d (force3D), без layout-свойств.
+    gsap.set(items, {
+      opacity: 0,
+      y: 18,
+      force3D: true,
+      willChange: 'transform,opacity',
+    })
+
+    const batchInstance = ScrollTrigger.batch(items, {
+      start: 'top 88%',
+      once: true,
+      onEnter: (batch) => {
+        batch.forEach((el, idx) => {
+          const col = Number((el as HTMLElement).dataset.col ?? 0)
+          const columnDelay = (col % 4) * 0.055
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            duration: 0.72,
+            delay: columnDelay + idx * 0.05,
+            ease: 'expo.out',
+            force3D: true,
+            overwrite: 'auto',
+            onComplete: () => {
+              gsap.set(el, { clearProps: 'willChange' })
+            },
+          })
+        })
+      },
+    })
+
+    return () => {
+      batchInstance.forEach((trigger) => trigger.kill())
+      gsap.killTweensOf(items)
+    }
+  }, [])
+
   return (
     <>
       <section
@@ -725,7 +739,11 @@ export function EtherealExtractions() {
                   openFlyModal(p, productFlyDescription(p), img.getBoundingClientRect())
                 }}
               >
-                <RevealOnScroll columnIndex={index}>
+                <div
+                  ref={revealRefCallbacks[index]}
+                  className="product-reveal"
+                  data-col={index % 4}
+                >
                   <ProductCard
                     name={p.name}
                     image={p.image}
@@ -758,7 +776,7 @@ export function EtherealExtractions() {
                       {p.notes}
                     </p>
                   </div>
-                </RevealOnScroll>
+                </div>
               </article>
             ))}
         </div>
