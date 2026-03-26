@@ -1,4 +1,4 @@
-import { useRef, useState, type CSSProperties, type MouseEvent } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
 import type Lenis from 'lenis'
 import { useLenis } from 'lenis/react'
 
@@ -7,8 +7,10 @@ import {
   FLASH_PRODUCT_CARD_EVENT,
   INITIO_SIDE_EFFECT_CARD_ID,
   SAUVAGE_DIOR_CARD_ID,
-} from './EtherealExtractions'
-import { HeroLiquidGlassBackground } from './HeroLiquidGlass'
+} from './productAnchors'
+const HeroLiquidGlassBackground = lazy(() =>
+  import('./HeroLiquidGlass').then((m) => ({ default: m.HeroLiquidGlassBackground })),
+)
 
 /**
  * Прокрутка к карточке: центр блока с фото по центру экрана (учитывает Lenis).
@@ -72,7 +74,7 @@ type HeroNote = {
 const heroNotesMadawi: HeroNote[] = [
   {
     key: 'madawi-vanilla',
-    src: '/hero/notes/note-vanilla.png',
+    src: '/hero/notes/note-vanilla.webp',
     label: 'Ваниль',
     className:
       'top-[2%] left-[0%] w-[min(30%,7.5rem)] -rotate-[18deg] sm:w-[28%] opacity-[0.92]',
@@ -85,7 +87,7 @@ const heroNotesMadawi: HeroNote[] = [
   },
   {
     key: 'madawi-patchouli',
-    src: '/hero/notes/note-patchouli.png',
+    src: '/hero/notes/note-patchouli.webp',
     label: 'Пачули',
     className:
       'top-[6%] right-[-2%] w-[min(38%,9rem)] rotate-[8deg] sm:w-[34%] opacity-[0.9]',
@@ -98,7 +100,7 @@ const heroNotesMadawi: HeroNote[] = [
   },
   {
     key: 'madawi-tonka',
-    src: '/hero/notes/note-tonka.png',
+    src: '/hero/notes/note-tonka.webp',
     label: 'Боб тонка',
     className:
       'top-[38%] -left-[10%] w-[min(32%,7.8rem)] -rotate-[10deg] sm:w-[30%] opacity-[0.88]',
@@ -111,7 +113,7 @@ const heroNotesMadawi: HeroNote[] = [
   },
   {
     key: 'madawi-cardamom',
-    src: '/hero/notes/note-cardamom.png',
+    src: '/hero/notes/note-cardamom.webp',
     label: 'Кардамон',
     className:
       'bottom-[16%] left-[2%] w-[min(34%,8.2rem)] rotate-[14deg] sm:w-[31%] opacity-[0.9]',
@@ -124,7 +126,7 @@ const heroNotesMadawi: HeroNote[] = [
   },
   {
     key: 'madawi-bromeliad',
-    src: '/hero/notes/note-bromeliad.png',
+    src: '/hero/notes/note-bromeliad.webp',
     label: 'Бромелия',
     className:
       'bottom-[8%] right-[-3%] w-[min(40%,9.5rem)] rotate-[6deg] sm:w-[36%] opacity-[0.88]',
@@ -141,7 +143,7 @@ const heroNotesMadawi: HeroNote[] = [
 const heroNotesSauvage: HeroNote[] = [
   {
     key: 'sauvage-bergamot',
-    src: '/hero/notes/note-sauvage-bergamot.png',
+    src: '/hero/notes/note-sauvage-bergamot.webp',
     label: 'Бергамот',
     className:
       'top-[3%] right-[-3%] w-[min(36%,8.8rem)] rotate-[10deg] sm:w-[32%] opacity-[0.9]',
@@ -154,7 +156,7 @@ const heroNotesSauvage: HeroNote[] = [
   },
   {
     key: 'sauvage-black-pepper',
-    src: '/hero/notes/note-sauvage-black-pepper.png',
+    src: '/hero/notes/note-sauvage-black-pepper.webp',
     label: 'Чёрный перец',
     className:
       'top-[22%] -left-[8%] w-[min(30%,7.4rem)] -rotate-[14deg] sm:w-[28%] opacity-[0.88]',
@@ -167,7 +169,7 @@ const heroNotesSauvage: HeroNote[] = [
   },
   {
     key: 'sauvage-lavender',
-    src: '/hero/notes/note-sauvage-lavender.png',
+    src: '/hero/notes/note-sauvage-lavender.webp',
     label: 'Лаванда',
     className:
       'top-[40%] -right-[6%] w-[min(33%,8rem)] rotate-[16deg] sm:-right-[10%] sm:w-[30%] opacity-[0.86]',
@@ -180,7 +182,7 @@ const heroNotesSauvage: HeroNote[] = [
   },
   {
     key: 'sauvage-sichuan-pepper',
-    src: '/hero/notes/note-sauvage-sichuan-pepper.png',
+    src: '/hero/notes/note-sauvage-sichuan-pepper.webp',
     label: 'Сычуаньский перец',
     className:
       'bottom-[20%] left-[-4%] w-[min(34%,8.2rem)] -rotate-[8deg] sm:w-[31%] opacity-[0.9]',
@@ -193,7 +195,7 @@ const heroNotesSauvage: HeroNote[] = [
   },
   {
     key: 'sauvage-ambroxan',
-    src: '/hero/notes/note-sauvage-ambroxan.png',
+    src: '/hero/notes/note-sauvage-ambroxan.webp',
     label: 'Амброксан',
     className:
       'bottom-[6%] right-[-2%] w-[min(38%,9.2rem)] rotate-[4deg] sm:w-[35%] opacity-[0.87]',
@@ -210,7 +212,7 @@ const heroNotesSauvage: HeroNote[] = [
 const heroNotesInitio: HeroNote[] = [
   {
     key: 'initio-vanilla',
-    src: '/hero/notes/note-initio-vanilla.png',
+    src: '/hero/notes/note-initio-vanilla.webp',
     label: 'Ваниль',
     className:
       'top-[4%] right-[-4%] w-[min(35%,8.6rem)] rotate-[8deg] sm:w-[31%] opacity-[0.9]',
@@ -223,7 +225,7 @@ const heroNotesInitio: HeroNote[] = [
   },
   {
     key: 'initio-gedion',
-    src: '/hero/notes/note-initio-gedion.png',
+    src: '/hero/notes/note-initio-gedion.webp',
     label: 'Гедион',
     className:
       'top-[24%] -left-[9%] w-[min(31%,7.6rem)] -rotate-[12deg] sm:w-[29%] opacity-[0.88]',
@@ -236,7 +238,7 @@ const heroNotesInitio: HeroNote[] = [
   },
   {
     key: 'initio-rum',
-    src: '/hero/notes/note-initio-rum.png',
+    src: '/hero/notes/note-initio-rum.webp',
     label: 'Ром',
     className:
       'top-[42%] -right-[8%] w-[min(32%,7.9rem)] rotate-[14deg] sm:-right-[12%] sm:w-[30%] opacity-[0.87]',
@@ -249,7 +251,7 @@ const heroNotesInitio: HeroNote[] = [
   },
   {
     key: 'initio-tobacco',
-    src: '/hero/notes/note-initio-tobacco.png',
+    src: '/hero/notes/note-initio-tobacco.webp',
     label: 'Табак',
     className:
       'bottom-[18%] left-[-5%] w-[min(36%,8.5rem)] -rotate-[6deg] sm:w-[32%] opacity-[0.89]',
@@ -262,7 +264,7 @@ const heroNotesInitio: HeroNote[] = [
   },
   {
     key: 'initio-cinnamon',
-    src: '/hero/notes/note-initio-cinnamon.png',
+    src: '/hero/notes/note-initio-cinnamon.webp',
     label: 'Корица',
     className:
       'bottom-[7%] -right-[4%] w-[min(34%,8.2rem)] rotate-[5deg] sm:-right-[8%] sm:w-[31%] opacity-[0.88]',
@@ -288,7 +290,7 @@ type HeroHologramVariant = {
 const heroHologramVariants: HeroHologramVariant[] = [
   {
     cardId: ARABIAN_OUD_MADAWI_CARD_ID,
-    bottleSrc: '/hero/arabian-oud-madawi-hero.png',
+    bottleSrc: '/hero/arabian-oud-madawi-hero.webp',
     bottleAlt: 'Arabian Oud Madawi Gold Edition',
     bottleAria:
       'Arabian Oud Madawi Gold — перейти к карточке в коллекции. Восточно-цветочная гурманская композиция, сочетающая сочные красные фрукты, пряный кардамон, ноты ананаса, жасмина и теплую базу из ванили, пачули и янтаря',
@@ -299,7 +301,7 @@ const heroHologramVariants: HeroHologramVariant[] = [
   },
   {
     cardId: SAUVAGE_DIOR_CARD_ID,
-    bottleSrc: '/hero/dior-sauvage-eau-de-parfum-hero.png',
+    bottleSrc: '/hero/dior-sauvage-eau-de-parfum-hero.webp',
     bottleAlt: 'Dior Sauvage Eau de Parfum',
     bottleAria:
       'Dior Sauvage Eau de Parfum — перейти к карточке в коллекции. Бергамот, чёрный и сычуаньский перец, лаванда и амброксан в шлейфе',
@@ -310,7 +312,7 @@ const heroHologramVariants: HeroHologramVariant[] = [
   },
   {
     cardId: INITIO_SIDE_EFFECT_CARD_ID,
-    bottleSrc: '/hero/initio-side-effect-hero.png',
+    bottleSrc: '/hero/initio-side-effect-hero.webp',
     bottleAlt: 'Initio Side Effect',
     bottleAria:
       'Initio Side Effect — перейти к карточке в коллекции. Восточно-гурманский шипр: ром, ваниль, табак, корица и тёплые смолистые ноты',
@@ -448,7 +450,29 @@ function HologramSwitch({
 export function Hero() {
   const heroSectionRef = useRef<HTMLElement>(null)
   const [hologramIndex, setHologramIndex] = useState(0)
+  const [enableLiquidGlass, setEnableLiquidGlass] = useState(false)
   const lenis = useLenis()
+
+  useEffect(() => {
+    let cancelled = false
+    const enable = () => {
+      if (!cancelled) setEnableLiquidGlass(true)
+    }
+
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(enable, { timeout: 1200 })
+      return () => {
+        cancelled = true
+        window.cancelIdleCallback(id)
+      }
+    }
+
+    const t = globalThis.setTimeout(enable, 650)
+    return () => {
+      cancelled = true
+      globalThis.clearTimeout(t)
+    }
+  }, [])
 
   const switchTitles = [
     'Arabian Oud Madawi Gold',
@@ -462,7 +486,15 @@ export function Hero() {
       id="home"
       className="relative flex min-h-screen flex-col overflow-hidden pt-28 pb-28 md:pb-32"
     >
-      <HeroLiquidGlassBackground visibilityRootRef={heroSectionRef} />
+      {enableLiquidGlass ? (
+        <Suspense
+          fallback={<div className="pointer-events-none absolute inset-0 bg-[#050505]" aria-hidden />}
+        >
+          <HeroLiquidGlassBackground visibilityRootRef={heroSectionRef} />
+        </Suspense>
+      ) : (
+        <div className="pointer-events-none absolute inset-0 bg-[#050505]" aria-hidden />
+      )}
 
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.12] mix-blend-overlay"

@@ -3,6 +3,15 @@ import { useLenis } from 'lenis/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
+  ARABIAN_OUD_MADAWI_CARD_ID,
+  ARABIAN_OUD_MADAWI_PHOTO_FRAME_ID,
+  FLASH_PRODUCT_CARD_EVENT,
+  INITIO_SIDE_EFFECT_CARD_ID,
+  INITIO_SIDE_EFFECT_PHOTO_FRAME_ID,
+  SAUVAGE_DIOR_CARD_ID,
+  SAUVAGE_DIOR_PHOTO_FRAME_ID,
+} from './productAnchors'
+import {
   memo,
   useCallback,
   useEffect,
@@ -13,23 +22,15 @@ import {
   type Ref,
 } from 'react'
 
-/**
- * Якорь для ссылки с героя: Arabian Oud — на lg-сетке 4×N вторая карточка второго ряда.
- */
-export const ARABIAN_OUD_MADAWI_CARD_ID = 'product-arabian-oud-madawi'
-/** Рамка с фото — золотая вспышка при клике по 1-й голограмме. */
-export const ARABIAN_OUD_MADAWI_PHOTO_FRAME_ID = 'product-arabian-oud-madawi-photo-frame'
-/** Вторая голограмма в герое — Dior Sauvage (клик ведёт на эту карточку). */
-export const SAUVAGE_DIOR_CARD_ID = 'product-sauvage-dior'
-/** Рамка с фото — вспышка DarkBlue при клике по 2-й голограмме. */
-export const SAUVAGE_DIOR_PHOTO_FRAME_ID = 'product-sauvage-dior-photo-frame'
-/** Третья голограмма — Initio Side Effect. */
-export const INITIO_SIDE_EFFECT_CARD_ID = 'product-initio-side-effect'
-/** Рамка с фото (бордер вокруг изображения) — вспышка MediumOrchid при клике по 3-й голограмме. */
-export const INITIO_SIDE_EFFECT_PHOTO_FRAME_ID = 'product-initio-side-effect-photo-frame'
-
-/** Событие с `detail.cardId` — мигание карточки в коллекции (клик по голограмме в герое). */
-export const FLASH_PRODUCT_CARD_EVENT = 'dikiy-flash-product-card' as const
+export {
+  ARABIAN_OUD_MADAWI_CARD_ID,
+  ARABIAN_OUD_MADAWI_PHOTO_FRAME_ID,
+  FLASH_PRODUCT_CARD_EVENT,
+  INITIO_SIDE_EFFECT_CARD_ID,
+  INITIO_SIDE_EFFECT_PHOTO_FRAME_ID,
+  SAUVAGE_DIOR_CARD_ID,
+  SAUVAGE_DIOR_PHOTO_FRAME_ID,
+} from './productAnchors'
 
 type Product = {
   name: string
@@ -51,7 +52,7 @@ const products: Product[] = [
   {
     name: 'Bois Impérial Essential',
     notes: 'Essential Parfums',
-    image: '/perfumes/Blue Talisman Ex Nihilo.png',
+    image: '/perfumes/Blue Talisman Ex Nihilo.webp',
     offset: 'lg:translate-y-0',
     detailBlurb:
       'Древесно-ароматический парфюм Essential Parfums: зелёный шалфей, кедр и нота «чёрного чая» создают сухой, элегантный силуэт. Создан Кентином Бишем — минималистичная бутылка и чистый, современный характер для повседневной роскоши.',
@@ -60,7 +61,7 @@ const products: Product[] = [
   {
     name: 'Sauvage Dior',
     notes: 'Christian Dior',
-    image: '/perfumes/Bois-Imperial-Essential-Parfums.png',
+    image: '/perfumes/Bois-Imperial-Essential-Parfums.webp',
     offset: 'lg:translate-y-14',
     cardId: SAUVAGE_DIOR_CARD_ID,
     detailBlurb:
@@ -70,7 +71,7 @@ const products: Product[] = [
   {
     name: 'Blue Talisman Ex Nihilo',
     notes: 'Ex Nihilo',
-    image: '/perfumes/Bvlgari.png',
+    image: '/perfumes/Bvlgari.webp',
     offset: 'lg:translate-y-6',
     detailBlurb:
       'Парижский модерн и чистые аккорды: цитрус, ароматические ноты и древесно-мускусная база. Лёгкий, элегантный характер — как второй слой на коже, без лишней тяжести.',
@@ -79,7 +80,7 @@ const products: Product[] = [
   {
     name: 'Creed Aventus',
     notes: 'Creed',
-    image: '/perfumes/Christian Dior Sauvage.png',
+    image: '/perfumes/Christian Dior Sauvage.webp',
     offset: 'lg:translate-y-10',
     detailBlurb:
       'Легендарный фруктово-древесный букет: ананас, чёрная смородина, берёза и дымный шлейф. Символ силы и уверенности — один из самых узнаваемых люксовых ароматов в мире.',
@@ -88,7 +89,7 @@ const products: Product[] = [
   {
     name: 'Intriga Devil',
     notes: 'DikiY Perfume',
-    image: '/perfumes/creed-aventus.png',
+    image: '/perfumes/creed-aventus.webp',
     offset: 'lg:-translate-y-2',
     detailBlurb:
       'Домашняя линия DikiY Perfume: соблазнительный восточный или древесно-пряный характер с тёплой базой. Для тех, кто любит глубину, стойкость и «интригу» в шлейфе.',
@@ -97,7 +98,7 @@ const products: Product[] = [
   {
     name: 'Arabian Oud Madawi Gold',
     notes: 'Arabian Oud',
-    image: '/perfumes/Devils Intrigue.png',
+    image: '/perfumes/Devils Intrigue.webp',
     offset: 'lg:translate-y-16',
     cardId: ARABIAN_OUD_MADAWI_CARD_ID,
     detailBlurb:
@@ -107,7 +108,7 @@ const products: Product[] = [
   {
     name: 'Marc-Antoine Barrois Tilia',
     notes: 'Marc-Antoine Barrois',
-    image: '/perfumes/Escentric Molecules Molecule 02.png',
+    image: '/perfumes/Escentric Molecules Molecule 02.webp',
     offset: 'lg:translate-y-0',
     detailBlurb:
       'Солнечный цветочно-древесный аромат: лайм, инжир, липовый цвет и кедр. Прозрачный, но тёплый — как летний сад в Провансе, утончённо и по-французски.',
@@ -116,7 +117,7 @@ const products: Product[] = [
   {
     name: 'Louis Vuitton Symphony',
     notes: 'Louis Vuitton',
-    image: '/perfumes/ganymede.png',
+    image: '/perfumes/ganymede.webp',
     offset: 'lg:translate-y-14',
     detailBlurb:
       'Свежая энергия от Жака Кавалье: имбирь, грейпфрут и лёгкая древесность. Бодрящий, «дорожный» люкс LV — чистый, современный и универсальный для любого сезона.',
@@ -125,7 +126,7 @@ const products: Product[] = [
   {
     name: 'Ombre Nomade Louis Vuitton',
     notes: 'Louis Vuitton',
-    image: '/perfumes/Initio SIDE EFFECT.png',
+    image: '/perfumes/Initio SIDE EFFECT.webp',
     offset: 'lg:translate-y-6',
     detailBlurb:
       'Глубокий восточный люкс: уд, бензоин, пряности и кожаный оттенок. Тёмный, медитативный шлейф — аромат для вечера и особых моментов, без компромиссов по стойкости.',
@@ -134,7 +135,7 @@ const products: Product[] = [
   {
     name: 'Tiziana Terenzi Kirke',
     notes: 'Tiziana Terenzi',
-    image: '/perfumes/Louis Vuitton Ombre Nomade.png',
+    image: '/perfumes/Louis Vuitton Ombre Nomade.webp',
     offset: 'lg:translate-y-10',
     detailBlurb:
       'Фруктово-мускусная сказка: маракуйя, персик, малина и мягкая ванильно-древесная база. Сияющий, «сочный» унисекс — праздник на коже и один из хитов итальянского дома.',
@@ -143,7 +144,7 @@ const products: Product[] = [
   {
     name: 'Imagination Louis Vuitton',
     notes: 'Louis Vuitton',
-    image: '/perfumes/louis-vuitton-imagination.png',
+    image: '/perfumes/louis-vuitton-imagination.webp',
     offset: 'lg:-translate-y-2',
     detailBlurb:
       'Светлый цитрусово-амбровый рисунок: чёрный чай, амбра, гваяковое дерево и свежие цитрусы. Утончённый, «воздушный» LV — интеллигентная росковь без крика.',
@@ -152,7 +153,7 @@ const products: Product[] = [
   {
     name: 'Initio Side Effect',
     notes: 'Initio Parfums',
-    image: '/perfumes/initio-side-effect.png',
+    image: '/perfumes/initio-side-effect.webp',
     offset: 'lg:translate-y-16',
     cardId: INITIO_SIDE_EFFECT_CARD_ID,
     detailBlurb:
@@ -162,7 +163,7 @@ const products: Product[] = [
   {
     name: "Louis Vuitton L'Immensité",
     notes: 'Louis Vuitton',
-    image: '/perfumes/louis-vuitton-symphony.png',
+    image: '/perfumes/louis-vuitton-symphony.webp',
     offset: 'lg:translate-y-0',
     detailBlurb:
       'Бесконечная свежесть: грейпфрут, имбирь, амброксан и чистая древесность. Морской, просторный характер — как окно в открытое небо, минимализм и сила LV.',
@@ -171,7 +172,7 @@ const products: Product[] = [
   {
     name: 'Marc-Antoine Barrois Ganymede',
     notes: 'Marc-Antoine Barrois',
-    image: '/perfumes/madawi.png',
+    image: '/perfumes/madawi.webp',
     offset: 'lg:translate-y-14',
     detailBlurb:
       'Минерально-цитрусовый футуризм: мандарин, шафран, замша и «мокрый» камень. Уникальный унисекс — интеллектуальный, современный и легко узнаваемый с первых нот.',
@@ -180,7 +181,7 @@ const products: Product[] = [
   {
     name: 'Le Gemme Tygar Bvlgari',
     notes: 'Bvlgari',
-    image: '/perfumes/tilia.png',
+    image: '/perfumes/tilia.webp',
     offset: 'lg:translate-y-6',
     detailBlurb:
       'Линия Le Gemme: яркий грейпфрут, амбровое дерево и сухой древесный шлейф. Солнечная сила и итальянская росковь — брутальный свежий люкс для уверенного входа.',
@@ -189,7 +190,7 @@ const products: Product[] = [
   {
     name: 'Escentric Molecules Molecule 02',
     notes: 'Escentric Molecules',
-    image: '/perfumes/Tiziana Terenzi Kirke.png',
+    image: '/perfumes/Tiziana Terenzi Kirke.webp',
     offset: 'lg:translate-y-10',
     detailBlurb:
       'Чистый амброксан: один молекулярный компонент, который по-разному раскрывается на каждой коже. «Облако» шлейфа, почти невидимый старт и магнетизм на расстоянии — минимализм Escentric.',

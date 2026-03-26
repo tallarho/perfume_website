@@ -6,7 +6,7 @@ import {
   ARABIAN_OUD_MADAWI_CARD_ID,
   INITIO_SIDE_EFFECT_CARD_ID,
   SAUVAGE_DIOR_CARD_ID,
-} from './EtherealExtractions'
+} from './productAnchors'
 
 const HERO_PRODUCT_HASH_IDS = [
   ARABIAN_OUD_MADAWI_CARD_ID,

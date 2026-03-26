@@ -10,28 +10,16 @@ const LOADER_BG_LAYERS = `
   linear-gradient(172deg, #221e1b 0%, #181512 32%, #100e0c 68%, #080706 100%)
 `
 
-const PREFETCH_URLS = ['/logo-dikiy.png'] as const
-
-function waitWindowLoad(): Promise<void> {
-  if (document.readyState === 'complete') return Promise.resolve()
-  return new Promise((resolve) => {
-    window.addEventListener('load', () => resolve(), { once: true })
-  })
-}
+const LOADER_MIN_MS = 420
+const LOADER_MAX_MS = 2300
 
 function waitFonts(): Promise<void> {
   const p = document.fonts?.ready
   return p ? p.then(() => undefined) : Promise.resolve()
 }
 
-function prefetchAll(urls: readonly string[]): Promise<void> {
-  return Promise.allSettled(
-    urls.map((url) =>
-      fetch(url, { cache: 'force-cache' }).then((r) =>
-        r.ok ? r.blob() : Promise.reject(new Error(url)),
-      ),
-    ),
-  ).then(() => undefined)
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => window.setTimeout(resolve, ms))
 }
 
 export function SiteLoader() {
@@ -46,7 +34,12 @@ export function SiteLoader() {
 
     const run = async () => {
       try {
-        await Promise.all([waitWindowLoad(), waitFonts(), prefetchAll(PREFETCH_URLS)])
+        const startedAt = performance.now()
+        await Promise.race([waitFonts(), sleep(LOADER_MAX_MS)])
+        const elapsed = performance.now() - startedAt
+        if (elapsed < LOADER_MIN_MS) {
+          await sleep(LOADER_MIN_MS - elapsed)
+        }
         if (cancelled) return
         await new Promise<void>((r) =>
           requestAnimationFrame(() => {
