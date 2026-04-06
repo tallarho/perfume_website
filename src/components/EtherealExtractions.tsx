@@ -88,11 +88,11 @@ const products: Product[] = [
   },
   {
     name: 'Intriga Devil',
-    notes: 'DikiY Perfume',
+    notes: 'AURA PERFUME',
     image: '/perfumes/creed-aventus.webp',
     offset: 'lg:-translate-y-2',
     detailBlurb:
-      'Домашняя линия DikiY Perfume: соблазнительный восточный или древесно-пряный характер с тёплой базой. Для тех, кто любит глубину, стойкость и «интригу» в шлейфе.',
+      'Домашняя линия AURA PERFUME: соблазнительный восточный или древесно-пряный характер с тёплой базой. Для тех, кто любит глубину, стойкость и «интригу» в шлейфе.',
     pyramidNotes: ['цитрус', 'пряности', 'роза', 'уд', 'ваниль'],
   },
   {
@@ -202,7 +202,7 @@ const products: Product[] = [
 function productFlyDescription(p: Product): string {
   const extra = p.detailBlurb?.trim()
   if (extra) return extra
-  return `${p.name} — ${p.notes}. Оригинальные и масляные духи в подборке DikiY Perfume. Объём и наличие уточняйте при заказе.`
+  return `${p.name} — ${p.notes}. Оригинальные и масляные духи в подборке AURA PERFUME. Объём и наличие уточняйте при заказе.`
 }
 
 const volumeOptions = ['10 мл', '20 мл', '30 мл', '50 мл'] as const

@@ -28,13 +28,14 @@ export function Header() {
           className="flex shrink-0 items-center rounded-full outline-none ring-offset-2 ring-offset-[#050505]/80 transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-amber-200/35"
         >
           <img
-            src="/logo-dikiy.webp"
-            alt="DikiY Perfume"
-            width={140}
-            height={180}
-            loading="lazy"
+            src="/logo-aura-perfume.webp"
+            alt="AURA PERFUME"
+            width={320}
+            height={320}
+            loading="eager"
             decoding="async"
-            className="h-[3.25rem] w-auto object-contain object-left md:h-[4.25rem]"
+            fetchPriority="high"
+            className="h-[4rem] w-auto max-h-full object-contain object-left md:h-[4.85rem]"
           />
         </a>
 

@@ -109,12 +109,9 @@ export function SiteLoader() {
         }}
         aria-hidden
       />
-      <div className="relative z-[1] flex flex-col items-center gap-2 text-center">
-        <p className="font-serif text-[clamp(1.15rem,3.5vw,1.65rem)] font-light tracking-[0.32em] text-white/42">
-          DIKIY
-        </p>
-        <p className="font-sans text-[10px] font-medium tracking-[0.48em] text-white/28 uppercase md:text-[11px]">
-          PERFUME
+      <div className="relative z-[1] flex flex-col items-center text-center">
+        <p className="font-sans text-[10px] font-medium tracking-[0.32em] text-white/38 uppercase md:text-[11px] md:tracking-[0.36em]">
+          AURA PERFUME
         </p>
       </div>
     </div>

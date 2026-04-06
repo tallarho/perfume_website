@@ -7,9 +7,9 @@ export function Philosophy() {
       <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-2 lg:items-center lg:gap-20">
         <div className="relative aspect-square max-h-[min(100vw,520px)] w-full overflow-hidden rounded-sm border border-white/[0.06] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)]">
           <img
-            src="/about-founder.webp"
-            alt="Основатель DikiY Perfume с флаконом духов на фоне ночного города"
-            className="absolute inset-0 h-full w-full object-cover object-[center_28%]"
+            src="/about-brand.webp"
+            alt="AURA PERFUME — люксовая мужская композиция: флакон духов, часы и запонки на тёмной кожаной поверхности"
+            className="absolute inset-0 h-full w-full object-cover object-center"
             loading="lazy"
             decoding="async"
           />

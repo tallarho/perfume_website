@@ -14,7 +14,7 @@ export function SiteFooter() {
     <footer className="border-t border-white/[0.06] bg-void/88 px-6 py-10 backdrop-blur-[1px] md:px-10">
       <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
         <p className="font-sans text-[10px] tracking-[0.15em] text-white/35 uppercase">
-          © {new Date().getFullYear()} DIKIY PERFUME · Все права защищены
+          © {new Date().getFullYear()} AURA PERFUME · Все права защищены
         </p>
         <div className="flex flex-col items-start gap-2 sm:items-end">
           <ul className="flex flex-wrap gap-8">

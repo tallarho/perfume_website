@@ -6,7 +6,7 @@ export function BrandMarquee() {
       key={i}
       className="inline-block shrink-0 px-8 font-sans text-[11px] font-medium tracking-[0.35em] text-amber-200/55 uppercase md:px-10 md:text-xs md:tracking-[0.42em]"
     >
-      DIKIY PERFUME
+      AURA PERFUME
     </span>
   ))
 
